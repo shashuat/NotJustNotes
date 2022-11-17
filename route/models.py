@@ -6,6 +6,8 @@ User=get_user_model()
 class teacher(models.Model):
     teacher=models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+	    return "teacher_name : " + str(self.teacher)
 
 class course(models.Model):
     course_id=models.AutoField(primary_key=True)
@@ -13,10 +15,13 @@ class course(models.Model):
     teacher_name=models.ForeignKey(User, on_delete=models.CASCADE,db_constraint=False)
 
     def __str__(self):
-	    return self.course_name
+	    return "primary key : " + str(self.pk) + " , course_name : " + str(self.course_name)
 
 class student(models.Model):
     student_name=models.ForeignKey(User, on_delete=models.CASCADE)
     course_id = models.ForeignKey(course, on_delete=models.CASCADE,blank=True)
+
+    def __str__(self):
+	    return "student_name : " + str(self.student_name)
 
 

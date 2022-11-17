@@ -26,12 +26,32 @@ def login(request):
 
 def teacher_page(request):
     user=request.user
-    data=course.objects.filter(teacher_name=user)
+    if request.method == "POST":
+        c_name=request.POST['name']
+        teacher=user
+        if user is not None:
+            data=course(teacher_name=teacher,course_name=c_name)
+            data.save()
+            data=course.objects.filter(teacher_name=user)
+            context={"data":data}
+            return render(request,'home_teacher.html',context)
+    else:
+        data=course.objects.filter(teacher_name=user)
     context={"data":data}
     return render(request,'home_teacher.html',context)
 
 def student_page(request):
     user=request.user
-    data=student.objects.filter(student_name=user)
+    if request.method == "POST":
+        c_id=course.objects.get(pk=int(request.POST['id']))
+        stu=user
+        if user is not None:
+            data=student(student_name=stu,course_id=c_id)
+            data.save()
+            data=student.objects.filter(student_name=user)
+            context={"data":data}
+            return render(request,'home_teacher.html',context)
+    else:
+        data=student.objects.filter(student_name=user)
     context={"data":data}
     return render(request,'home_student.html',context)

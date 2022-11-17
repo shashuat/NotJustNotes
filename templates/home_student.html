@@ -3,7 +3,16 @@
 <br>
 {% for data in data%}
 
-{{ data.student_name }}
-{{ data.course_id}}<br>
+you are currently registered with course no : {{ data.course_id}}<br>
 
 {% endfor %}
+
+<form method="post">
+    {% csrf_token %} 
+    <fieldset>
+       <legend>Add Course</legend>  
+       <label>Enter your Course ID</label><br>  
+       <input type="number" name="id"><br>   
+       <input type="submit" value="submit">  
+    </fieldset>  
+ </form>  
