@@ -1,0 +1,9 @@
+{% load static %}
+<h1>welcome to dashboard {{ profession }} bhosdiwalo!</h1>
+<br>
+{% for data in data%}
+
+{{ data.student_name }}
+{{ data.course_id}}<br>
+
+{% endfor %}
