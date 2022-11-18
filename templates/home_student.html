@@ -3,7 +3,7 @@
 <br>
 {% for data in data%}
 
-you are currently registered with course no : {{ data.course_id}}<br>
+you are currently registered with course no : <a href="/classroom/{{data.course_id}}/student/">{{ data.course_id}}</a><br>
 
 {% endfor %}
 

@@ -3,7 +3,7 @@
 <br>
 {% for data in data%}
 
-Your Course : {{ data.course_name}} with course id: {{ data.course_id}}<br>
+Your Course : <a href="/classroom/{{data.course_id}}/teacher/">{{ data.course_name}} with course id: {{ data.course_id}}</a><br>
 
 {% endfor %}
 

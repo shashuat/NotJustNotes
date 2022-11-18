@@ -55,3 +55,15 @@ def student_page(request):
         data=student.objects.filter(student_name=user)
     context={"data":data}
     return render(request,'home_student.html',context)
+
+
+def student_classroom(request,**kwargs):
+    pk=kwargs.get('pk')
+    context={"pk":pk}
+    return render(request,"classroom-student.html",context)
+
+def teacher_classroom(request,**kwargs):
+    pk=kwargs.get('pk')
+    context={"pk":pk}
+    return render(request,"classroom-teacher.html",context)
+
