@@ -43,6 +43,12 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = 'njn.asgi.application'
 
+CHANNEL_LAYERS = {
+        'default' : {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer'
+            }
+        }        
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
