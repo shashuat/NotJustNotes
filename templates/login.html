@@ -6,19 +6,6 @@
 {% if user.is_authenticated %}
   <p>Welcome, You are logged in as {{ user.username }}</p>
   <br>
-  
-  <form method="post">
-    {% csrf_token %}
-    <p>Please select your Profession:</p>
-    <input type="radio" id="teacher" name="profession" value="teacher">
-    <label for="html">Teacher</label><br>
-    <input type="radio" id="student" name="profession" value="student">
-    <label for="css">Student</label>
-    <br>  
-    <input type="submit" value="Submit">
-  </form>
-
-
 {% else %}
   <a href="{% provider_login_url 'google' %}">Login With Google</a>
 {% endif %}
