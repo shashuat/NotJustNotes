@@ -22,6 +22,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -32,12 +33,15 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_framework',
     'route',
+    'socket_route',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
 ]
+
+ASGI_APPLICATION = 'njn.asgi.application'
 
 
 AUTHENTICATION_BACKENDS = [
