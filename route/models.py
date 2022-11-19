@@ -25,3 +25,21 @@ class student(models.Model):
 	    return "student_name : " + str(self.student_name)
 
 
+class user_type(models.Model):
+    is_teacher = models.BooleanField(default=False)
+    is_student = models.BooleanField(default=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        if self.is_student == True:
+            return str(self.user) + " - is_student"
+        else:
+            return str(self.user) + " - is_teacher"
+
+    def set_teacher(self):
+        self.is_teacher=True
+
+    def set_student(self):
+        self.is_student=True
+
+

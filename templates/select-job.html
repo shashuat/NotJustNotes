@@ -1,0 +1,25 @@
+{% load static %}
+{% load socialaccount %}
+<html>
+<body>
+<h1>My Google OAuth Project </h1>
+{% if user.is_authenticated %}
+  <p>Welcome, You are logged in as {{ user.username }}</p>
+  <br>
+  
+  <h1>choose your profession {{ user.username }} bhosdiwale!</h1>
+  <br>
+    <form method="post">
+        {% csrf_token %}
+        <p>Please select your Profession:</p>
+        <input type="radio" id="teacher" name="profession" value="teacher">
+        <label for="html">Teacher</label><br>
+        <input type="radio" id="student" name="profession" value="student">
+        <label for="css">Student</label>
+        <br>  
+        <input type="submit" value="Submit">
+    </form>
+{% else %}
+{% endif %}
+</body>
+</html>
