@@ -16,3 +16,16 @@ you are currently registered with course no : <a href="/classroom/{{data.course_
        <input type="submit" value="submit">  
     </fieldset>  
  </form>  
+
+<script type="text/javascript">
+let url = `ws://${window.location.host}/ws/dash/`
+
+const chatSocket = new WebSocket(url)
+
+chatSocket.onmessage = function(e){
+    let data = JSON.parse(e.data)
+    console.log('Data:', data)
+}
+
+</script>
+
