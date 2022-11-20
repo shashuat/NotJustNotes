@@ -1,3 +1,55 @@
+def getSummary(text):
+    import spacy
+    from spacy.lang.en.stop_words import STOP_WORDS
+    from string import punctuation
+
+    stopwords = list(STOP_WORDS)
+    nlp = spacy.load('en_core_web_sm')
+    doc = nlp(text)
+    tokens = [token.text for token in doc]
+
+    punctuation = punctuation + '\n'
+
+    word_frequencies = {}
+    for word in doc:
+    if word.text.lower() not in stopwords:
+        if word.text.lower() not in punctuation:
+        if word.text not in word_frequencies.keys():
+            word_frequencies[word.text] = 1
+        else:
+            word_frequencies[word.text] += 1
+
+    max_frequency = max(word_frequencies.values())
+    max_frequency
+    for word in word_frequencies.keys():
+    word_frequencies[word] = word_frequencies[word]/max_frequency
+
+    # print(word_frequencies)
+
+    sentence_tokens = [sent for sent in doc.sents]
+    # /print(sentence_tokens)
+
+    sentence_scores = {}
+    for sent in sentence_tokens:
+    for word in sent:
+        if word.text.lower() in word_frequencies.keys():
+            if sent not in sentence_scores.keys():
+            sentence_scores[sent] = word_frequencies[word.text.lower()]
+            else:
+            sentence_scores[sent] += word_frequencies[word.text.lower()]
+                    
+    from heapq import nlargest
+    select_length = int(len(sentence_tokens)*0.3)
+    summary = nlargest(select_length, sentence_scores, key = sentence_scores.get)
+    final_summary = [word.text for word in summary]
+    summary = ' '.join(final_summary)
+
+    # print(text)
+    # print(len(text))
+    print(summary)
+    print(len(summary))
+    return 
+
 text = """
 Dictatorship, ‘Tyranny’, ‘Despotism’
 In contemporary speech, dictatorship is often associated with tyranny or despotism. Terms such as dictator, tyrant, or despot are often used as synonyms or alternated between. The first students of the phenomenon of dictatorship in the interwar period, while maintaining that the concept of dictatorship is linked to the Roman model of an extraordinary, yet constitutional and temporary, magistrature, preferred to speak of a ‘new age of despots’, or of a new ‘ère des tyrannies’ (Halèvy, 1938). In more recent studies also the term ‘tyrant’ is preferred over that of dictator for defining the numerous ranks of those holding absolute personal power, dominating, in the second half of the century – and still in some cases dominating – in many countries of the so-called Third World (Rubin, 1987; Chirot, 1994). In fact, contemporary dictatorship evokes some of the characteristics of Greek tyranny, but there are also substantial differences. Above all, the origin of contemporary dictatorship is not always illegitimate. For example, Hitler came to power in 1933 through legal channels and many presidents who became dictators in Latin America were legally elected. Furthermore, the majority of modern dictatorships have a very complex structure of organization and exercise of power due to the mass dimension of the societies in which they operate, the methods they adopt and the scopes they propose. All the above makes contemporary dictatorship substantially new and different to tyranny. Therefore, the thesis that holds that the difference between tyranny and contemporary dictatorship as a form of absolute personal power is not substantive but regards solely the form, the technique and method of government should be forcefully rejected.
@@ -13,52 +65,4 @@ The necessary checks and balances of republican government prevent public offici
 
 Modern republicans such as Philip Pettit differ from democrats in viewing democracy as a derivative value, in service to the broader ideal of balanced or ‘contested’ government (Pettit, 1997: p. 187). All government decisions should be subject to challenge by institutions that prevent private inclinations from ruling public interests and ideas. Republicans have proposed bills of rights, public hearings, and many other devices designed to constrain and channel public decision making, so that ordinary citizens may influence their government's decisions, without diverting the public purposes of the state. For further references see Constitutionalism."""
 
-import spacy
-from spacy.lang.en.stop_words import STOP_WORDS
-from string import punctuation
-
-stopwords = list(STOP_WORDS)
-nlp = spacy.load('en_core_web_sm')
-doc = nlp(text)
-tokens = [token.text for token in doc]
-
-punctuation = punctuation + '\n'
-
-word_frequencies = {}
-for word in doc:
-  if word.text.lower() not in stopwords:
-    if word.text.lower() not in punctuation:
-      if word.text not in word_frequencies.keys():
-        word_frequencies[word.text] = 1
-      else:
-        word_frequencies[word.text] += 1
-
-max_frequency = max(word_frequencies.values())
-max_frequency
-for word in word_frequencies.keys():
-  word_frequencies[word] = word_frequencies[word]/max_frequency
-
-# print(word_frequencies)
-
-sentence_tokens = [sent for sent in doc.sents]
-  # /print(sentence_tokens)
-
-sentence_scores = {}
-for sent in sentence_tokens:
-  for word in sent:
-    if word.text.lower() in word_frequencies.keys():
-        if sent not in sentence_scores.keys():
-          sentence_scores[sent] = word_frequencies[word.text.lower()]
-        else:
-          sentence_scores[sent] += word_frequencies[word.text.lower()]
-                
-from heapq import nlargest
-select_length = int(len(sentence_tokens)*0.3)
-summary = nlargest(select_length, sentence_scores, key = sentence_scores.get)
-final_summary = [word.text for word in summary]
-summary = ' '.join(final_summary)
-
-print(text)
-print(len(text))
-print(summary)
-print(len(summary))
+getSummary(text)

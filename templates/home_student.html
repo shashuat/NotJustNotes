@@ -1,5 +1,12 @@
 {% load static %}
-<h1>welcome to dashboard {{ profession }} bhosdiwalo!</h1>
+{% if messages %}
+<div class="alert alert-success alert-dismissible">
+  {% for message in messages %}
+    <p>{{ message }}</p>
+  {% endfor %}
+</div>
+{% endif %}
+<h1>welcome to dashboard Student bhosdiwalo!</h1>
 <br>
 {% for data in data%}
 
@@ -16,3 +23,16 @@ you are currently registered with course no : <a href="/classroom/{{data.course_
        <input type="submit" value="submit">  
     </fieldset>  
  </form>  
+
+<script type="text/javascript">
+let url = `ws://${window.location.host}/ws/dash/`
+
+const chatSocket = new WebSocket(url)
+
+chatSocket.onmessage = function(e){
+    let data = JSON.parse(e.data)
+    console.log('Data:', data)
+}
+
+</script>
+

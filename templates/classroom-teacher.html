@@ -1,1 +1,31 @@
-teacher class {{pk}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Lobby</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+</head>
+<body>
+    <h1>Lets chat!</h1>
+
+    <a>link</a>
+
+    <script type="text/javascript">
+	let curr = `${window.location.href}`
+	const arr = curr.split("/")
+
+	let pk = arr[4]
+
+        let url = `ws://${window.location.host}/ws/teach/${pk}`
+
+        const chatSocket = new WebSocket(url)
+
+        chatSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            console.log('Data:', data)
+	}
+
+	</script>
+<body>
