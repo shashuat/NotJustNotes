@@ -2,7 +2,7 @@ from django.shortcuts import render ,HttpResponseRedirect , redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as authlogin
 from .models import student , course , user_type
-
+from django.contrib import messages
 
 def login(request):
     return render(request, 'login.html', {})
@@ -44,14 +44,16 @@ def teacher_page(request):
         if request.method == "POST":
             c_name=request.POST['name']
             teacher=user
-            if user is not None:
+            if not course.objects.filter(course_name=c_name).exists():
                 data=course(teacher_name=teacher,course_name=c_name)
                 data.save()
+                messages.success(request, f'new course {c_name} created successfully')
                 data=course.objects.filter(teacher_name=user)
                 context={"data":data}
                 return render(request,'home_teacher.html',context)
         else:
             data=course.objects.filter(teacher_name=user)
+        data=course.objects.filter(teacher_name=user)
         context={"data":data}
         return render(request,'home_teacher.html',context)
     else:
@@ -65,14 +67,16 @@ def student_page(request):
         if request.method == "POST":
             c_id=course.objects.get(pk=int(request.POST['id']))
             stu=user
-            if user is not None:
+            if not student.objects.filter(course_id=c_id).exists():
                 data=student(student_name=stu,course_id=c_id)
                 data.save()
+                messages.success(request, 'New course added succcessfully')
                 data=student.objects.filter(student_name=user)
                 context={"data":data}
                 return render(request,'home_teacher.html',context)
         else:
             data=student.objects.filter(student_name=user)
+        data=student.objects.filter(student_name=user)
         context={"data":data}
         return render(request,'home_student.html',context)
     else:
