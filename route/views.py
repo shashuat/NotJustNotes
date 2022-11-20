@@ -1,13 +1,13 @@
 from django.shortcuts import render ,HttpResponseRedirect , redirect
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as authlogin
 from .models import student , course , user_type
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def login(request):
     return render(request, 'login.html', {})
 
 
+@login_required
 def select_profession(request):
     user=request.user
     try:
@@ -37,6 +37,7 @@ def select_profession(request):
     context={}
     return render(request,"select-job.html",context)
 
+@login_required
 def teacher_page(request):
     user=request.user
     obj=user_type.objects.get(user=user)
@@ -59,6 +60,7 @@ def teacher_page(request):
     else:
         return render(request,'error.html')
 
+@login_required
 def student_page(request):
     user=request.user
     obj=user_type.objects.get(user=user)
@@ -82,7 +84,7 @@ def student_page(request):
     else:
         return render(request,'error.html')
 
-
+@login_required
 def student_classroom(request,**kwargs):
     user=request.user
     obj=user_type.objects.get(user=user)
@@ -93,6 +95,7 @@ def student_classroom(request,**kwargs):
     else:
         return render(request,'error.html')
 
+@login_required
 def teacher_classroom(request,**kwargs):
     user=request.user
     obj=user_type.objects.get(user=user)

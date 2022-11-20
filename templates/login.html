@@ -1,10 +1,9 @@
 {% load static %}
-{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Classic Login Form Example</title>
+    <title>Not Just Notes!</title>
     <link href="https://fonts.googleapis.com/css?family=Assistant:400,700" rel="stylesheet"/>
     <link rel="stylesheet" href={% static "login/style.css" %}>
   </head>
@@ -25,7 +24,7 @@
       <p class="msg">Welcome </p>
       <div class="form">
         <form>
-          <a href={% provider_login_url 'google' %} class="msg btn-login" id="do-login">Login with a Google Account</a>
+          <a href={% url 'social:begin' 'google-oauth2' %} class="msg btn-login" id="do-login">Login with a Google Account</a>
         </form>
       </div>
     </section>
