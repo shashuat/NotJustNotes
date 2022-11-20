@@ -1,13 +1,23 @@
 {% load static %}
 {% load socialaccount %}
-<html>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profession!!!</title>
+  </head>
 <body>
-<h1>My Google OAuth Project </h1>
+
+
+<h1>GOOGLE AUTHENTICATION </h1>
 {% if user.is_authenticated %}
   <p>Welcome, You are logged in as {{ user.username }}</p>
   <br>
   
-  <h1>choose your profession {{ user.username }} bhosdiwale!</h1>
+  <h1>Kindly choose your profession {{ user.username }}</h1>
   <br>
     <form method="post">
         {% csrf_token %}
