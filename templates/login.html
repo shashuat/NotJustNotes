@@ -1,12 +1,45 @@
 {% load static %}
 {% load socialaccount %}
-<html>
-<body>
-<h1>My Google OAuth Project </h1>
-{% if user.is_authenticated %}
-  <p>Welcome, You are logged in as {{ user.username }}</p>
-{% else %}
-  <a href="{% provider_login_url 'google' %}">Login With Google</a>
-{% endif %}
-</body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Classic Login Form Example</title>
+    <link href="https://fonts.googleapis.com/css?family=Assistant:400,700" rel="stylesheet"/>
+    <link rel="stylesheet" href={% static "login/style.css" %}>
+  </head>
+  <body>
+    <!-- partial:index.partial.html -->
+    <section class="login" id="login">
+      <div class="head">
+        <h1 class="company">Not Just Notes !</h1>
+      </div>
+      {% if user.is_authenticated %}
+      <p class="msg">Welcome, You are logged in as <b>{{ user.username }}</b>.</p>
+      <div class="form">
+        <form>
+          <a href="/profession/" class="btn-login" id="do-login">!!!GO Back to Dash Board!!!</a>
+        </form>
+      </div>
+      {% else %}
+      <p class="msg">Welcome </p>
+      <div class="form">
+        <form>
+          <a href={% provider_login_url 'google' %} class="msg btn-login" id="do-login">Login with a Google Account</a>
+        </form>
+      </div>
+    </section>
+    <footer>
+      <p>
+        Made with <span class="heart">&hearts;</span> by <a
+          href="https://github.com/zshashz/NotJustNotes"
+          >Pushpesh</a
+        >
+      </p>
+    </footer>
+     
+    <!-- partial -->
+    <script src={% static "login/script.js" %}></script>
+    {% endif %}
+  </body>
 </html>
