@@ -16,10 +16,11 @@ class DashConsumer(WebsocketConsumer):
 
         courses = [x.course_id.pk for x in data]
 
+
+
         for cid in courses:
             async_to_sync(self.channel_layer.group_add)(f"class-{cid}-dashboard", self.channel_name) 
 
-        async_to_sync(self.channel_layer.group_add)(f"class-7-student", self.channel_name) 
         self.send(text_data = json.dumps({
             'msg' : 'Joined dashboard'
             }))

@@ -8,9 +8,10 @@
 
 </head>
 <body>
-    <h1>Lets chat!</h1>
+    <h1>Classroom</h1>
 
-    <a>link</a>
+     <button type="button" class="control-button">Start</button>
+
 
     <script type="text/javascript">
 	let curr = `${window.location.href}`
@@ -26,6 +27,78 @@
             let data = JSON.parse(e.data)
             console.log('Data:', data)
 	}
+	
+	
+
+
+
+	var button = document.getElementsByClassName("control-button")[0]
+	button.addEventListener("click", toggle_rec)
+
+	let device = navigator.mediaDevices.getUserMedia({audio: true, video: false});
+	
+	let recorder = ''
+
+	var recording = false
+	var paused = false
+	
+	function record(){
+		if(paused == false){
+		device.then(stream => {
+			recorder = new MediaRecorder(stream)
+			recorder.ondataavailable = e => {
+				console.log(e.data)
+			//	chunks.push(e.data)
+				data = {
+					bitrate: recorder.audioBitsPerSecond,
+					audio: e.data
+				}
+				chatSocket.send(data.audio)
+				console.log(data.bitrate)
+
+
+//			if (chunks.length == 10){
+//					    console.log("playing")
+//				 const blob = new Blob(chunks);
+//
+//				var blobUrl = URL.createObjectURL(blob);
+					
+//			var link = document.createElement("a"); // Or maybe get it from the current document
+//			link.href = blobUrl;
+//			link.download = "aDefaultFileName.mp3";
+//			link.innerHTML = "Click here to download the file";
+//			document.body.appendChild(link); // Or append it whereever you want
+//
+//				}
+				    }
+
+			recorder.start(3000)
+			    })
+				    }
+			else{
+			recording.resume()
+				    }
+			recording = true
+			paused = false
+	}
+
+	function pause(){
+		recorder.pause()
+		paused = true
+		recording = false
+		    }
+
+
+	function toggle_rec(){
+			    if (recording == false){
+						record()
+						button.innerHTML = "Pause"
+					}
+			    else{
+						pause()
+						button.innerHTML = "Resume"
+				}
+		    }
 
 	</script>
 <body>
