@@ -1,2 +1,4 @@
 __pycache__/
+samples/*
 *.py[cod]
+db.sqlite3

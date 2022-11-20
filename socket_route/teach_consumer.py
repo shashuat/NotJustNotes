@@ -1,9 +1,9 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
-
 from route.models import course  
 
 from asgiref.sync import async_to_sync
+import whisper
 
 class TeachConsumer(WebsocketConsumer):
     def connect(self):
@@ -13,12 +13,11 @@ class TeachConsumer(WebsocketConsumer):
         
         self.class_id = self.route.split("/")[-1]
 
-
         self.caller = 0
         self.header = []
         self.head_size = 256
 
-        self.transcription = ""
+        self.transcript = ""
         self.chunks = []
 
         async_to_sync(self.channel_layer.group_add)(f"class-{self.class_id}-teacher", self.channel_name)
@@ -35,11 +34,13 @@ class TeachConsumer(WebsocketConsumer):
             },
         )
 
+        self.model = whisper.load_model("tiny")
+
 
     def receive(self, bytes_data):
         self.chunks.append(bytes_data)
 
-        filename = f'sample/filename{self.caller}.mp3'
+        filename = f'samples/filename{self.caller}.mp3'
 
         bd  = bytearray(bytes_data)
 
@@ -65,7 +66,9 @@ class TeachConsumer(WebsocketConsumer):
         trans = self.model.transcribe(filename)
         script = trans['text']
 
-        self.transcription += script
+
+        self.transcript += script
+
 
         async_to_sync(self.channel_layer.group_send)(
                 f"class-{self.class_id}-joined",
