@@ -2,10 +2,11 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard : Student</title>
+    <meta charset="UTF-8">
+    <title>Dashboard : Students </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href={% static "dashboard/style.css" %}>
+  
   </head>
   <body>
 {% if messages %}
@@ -14,37 +15,125 @@
     <p>{{ message }}</p>
   {% endfor %}
 </div>
-{% endif %}
-<h1>welcome to Students Dashboard</h1>
-<br>
-{% for data in data%}
-
-you are currently registered with course no : <a href="/classroom/{{data.course_id}}/student/">{{ data.course_id}}</a><br>
-
-{% endfor %}
-
-<form method="post">
-    {% csrf_token %} 
-    <fieldset>
-       <legend>Add Course</legend>  
-       <label>Enter your Course ID</label><br>  
-       <input type="number" name="id"><br>   
-       <input type="submit" value="submit">  
-    </fieldset>  
- </form>  
-
-<script type="text/javascript">
-let url = `ws://${window.location.host}/ws/dash/`
-
-const chatSocket = new WebSocket(url)
-
-chatSocket.onmessage = function(e){
-    let data = JSON.parse(e.data)
-    console.log('Data:', data)
-}
-
-</script>
-
+{% endif %} 
+<body>
+  <!-- partial:index.partial.html -->
+  <header class="header">
+    <div class="header-content responsive-wrapper">
+      <div class="header-logo">
+        <a>
+          Welcome Students
+        </a>
+      </div>
+      <div class="header-navigation">
+        <nav class="header-navigation-links">
+          <a href="#"> Home </a>
+          <a href="#"> Dashboard </a>
+          <a href="#"> Projects </a>
+          <a href="#"> Tasks </a>
+          <a href="#"> Reporting </a>
+          <a href="#"> Users </a>
+        </nav>
+        <div class="header-navigation-actions">
+          <a href="/logout/" class="button">
+            <i class="ph-lightning-bold"></i>
+            <span>Sign Out</span>
+          </a>
+          <a href="#" class="icon-button">
+            <i class="ph-gear-bold"></i>
+          </a>
+          <a href="#" class="icon-button">
+            <i class="ph-bell-bold"></i>
+          </a>
+          <a href="#" class="avatar">
+            <img src="https://uifaces.co/our-content/donated/gPZwCbdS.jpg" alt="" />
+          </a>
+        </div>
+      </div>
+      <a href="#" class="button">
+        <i class="ph-list-bold"></i>
+        <span>Menu</span>
+      </a>
+    </div>
+  </header>
+  <main class="main">
+    <div class="responsive-wrapper">
+      <div class="main-header">
+        <h1>Join new Course -></h1>
+        <div class="search">
+          <form method="post">
+            {% csrf_token %}
+            <input type="text" name="id" placeholder="Enter course id" />
+            <button type="submit" value="submit">
+              <i class="ph-magnifying-glass-bold"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="horizontal-tabs">
+        <a href="#">My details</a>
+        <a href="#">Profile</a>
+        <a href="#">Password</a>
+        <a href="#">Team</a>
+        <a href="#">Plan</a>
+        <a href="#">Billing</a>
+        <a href="#">Email</a>
+        <a href="#">Notifications</a>
+        <a href="#" class="active">Integrations</a>
+        <a href="#">API</a>
+      </div>
+      <div class="content">
+        <div class="content-panel">
+          <div class="vertical-tabs">
+            <a href="#" class="active">View all</a>
+            <a href="#">Developer tools</a>
+            <a href="#">Communication</a>
+            <a href="#">Productivity</a>
+            <a href="#">Browser tools</a>
+            <a href="#">Marketplace</a>
+          </div>
+        </div>
+        <div class="content-main">
+          <div class="card-grid">
+            {% for data in data%}
+            <article class="card">
+              <div class="card-header">
+                <div>
+                  <span><img src="https://assets.codepen.io/285131/zeplin.svg" /></span>
+                  <h3> {{data.course_id}}</h3>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" checked>
+                  <span></span>
+                </label>
+              </div>
+              <div class="card-body">
+                <p>Starting this class will send a notification to your students </p>
+              </div>
+              <div class="card-footer">
+                <a href="/classroom/{{data.course_id}}/student/">Join Class</a>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- partial -->
+    <script src='https://unpkg.com/phosphor-icons'></script><script  src="./script.js"></script>
+    <script type="text/javascript">
+      let url = `ws://${window.location.host}/ws/dash/`
+      
+      const chatSocket = new WebSocket(url)
+      
+      chatSocket.onmessage = function(e){
+          let data = JSON.parse(e.data)
+          console.log('Data:', data)
+      }
+      
+      </script>
 </body>
+
 </html>
 
