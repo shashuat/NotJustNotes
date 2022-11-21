@@ -1,34 +1,49 @@
 {% load static %}
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Profession!!!</title>
+    <meta charset="UTF-8" />
+    <title>Not Just Notes!</title>
+    <link href="https://fonts.googleapis.com/css?family=Assistant:400,700" rel="stylesheet"/>
+    <link rel="stylesheet" href={% static "login/style.css" %}>
   </head>
-<body>
-
-
-<h1>GOOGLE AUTHENTICATION </h1>
-{% if user.is_authenticated %}
-  <p>Welcome, You are logged in as {{ user.username }}</p>
-  <br>
-  
-  <h1>Kindly choose your profession {{ user.username }}</h1>
-  <br>
-    <form method="post">
-        {% csrf_token %}
-        <p>Please select your Profession:</p>
-        <input type="radio" id="teacher" name="profession" value="teacher">
-        <label for="html">Teacher</label><br>
-        <input type="radio" id="student" name="profession" value="student">
-        <label for="css">Student</label>
-        <br>  
-        <input type="submit" value="Submit">
-    </form>
-{% else %}
-{% endif %}
-</body>
+  <body>
+    <!-- partial:index.partial.html -->
+    <section class="login" id="login">
+      <div class="head">
+        <h1 class="company">add profession</h1>
+      </div>
+      {% if user.is_authenticated %}
+      <p class="msg">Welcome, You are logged in as <b>{{ user.username }}</b>.</p>
+      <div class="form">
+        <form method="post">
+          {% csrf_token %}
+          <p>Please select your Profession:</p>
+          <input type="radio" id="teacher" name="profession" value="teacher">
+          <label for="html">Teacher</label><br>
+          <input type="radio" id="student" name="profession" value="student">
+          <label for="css">Student</label>
+          <br>
+          <button type="submit" value="submit" class="center btn-login" id="do-login">Continue</button>
+        </form>
+      </div>
+      {% else %}
+      <p class="msg">Welcome </p>
+      <div class="form">
+        
+      </div>
+    </section>
+    <footer>
+      <p>
+        Made with <span class="heart">&hearts;</span> by <a
+          href="https://github.com/zshashz/NotJustNotes"
+          >Pushpesh</a
+        >
+      </p>
+    </footer>
+     
+    <!-- partial -->
+    <script src={% static "login/script.js" %}></script>
+    {% endif %}
+  </body>
 </html>
