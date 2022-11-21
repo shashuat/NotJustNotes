@@ -14,7 +14,8 @@ class ClassConsumer(WebsocketConsumer):
         
         self.class_id = self.route.split("/")[-1]
 
-        self.transcription = []
+        self.transcript = ""
+        self.summary = ""
 
         
         async_to_sync(self.channel_layer.group_send)(
@@ -30,13 +31,35 @@ class ClassConsumer(WebsocketConsumer):
     def transcription(self, event):
         script = event["trans"]
 
-        self.send(text_data=json.dumps(
-            {
-                "trans" : f"{script}"
-            }))
+        self.transcript += script
+
+        contents = {
+                "d_type": "lyrics_para",
+                "d_text": script
+                }
+
+        self.send(text_data = json.dumps(contents))
 
     def beg_script(self, event):
-        self.transcription = event["text"]
+        self.transcript = event["trans"]
+        self.summary = event["summary"]
+
+        contents = {
+                "teach_class": event["teach_class"],
+                "teach_time": event["teach_time"],
+                "teach_er": event["teach_er"],
+                }
+
+        for k,v in contents.items():
+            self.send(text_data = json.dumps(
+                {
+                    "d_type" : k,
+                    "d_text" : v,
+                    }))
+            
+
+
+     
 
 
         

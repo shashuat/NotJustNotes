@@ -1,21 +1,107 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Lobby</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-
-</head>
-<body>
-    <h1>Classroom</h1>
-
-     <button type="button" class="control-button">Start</button>
-
-
-    <script type="text/javascript">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: "#da373d",
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="h-screen w-screen overflow-hidden flex flex-col bg-blue-100">
+      <div class="flex-1 flex flex-row h-full">
+        <!-- Sidebar -->
+        <div
+          class="flex-[2] px-4 py-2 border-r h-full flex flex-col justify-between"
+        >
+          <div
+            class="flex flex-col items-start w-full bg-white shadow-lg p-3 rounded-md"
+          >
+            <h2 class="text-lg font-bold teach_class">Neural Netwok and Fuzzy Set</h2>
+            <h3 class="text-xs self-end text-gray-700 teach_er">Manoj Gupta</h3>
+            <p class="text-sm text-gray-500 teach_time">Started: 15:45:12</p>
+          </div>
+          <div class="flex flex-col space-y-4">
+            <button
+              class="bg-teal-400 text-white font-bold text-lg py-4 w-full rounded-md mx-auto hover:bg-teal-500 duration-100 control-button"
+            >
+              Start
+            </button>
+            <button
+              class="bg-teal-400 text-white font-bold text-lg p-4 mx-auto w-full rounded-md hover:bg-teal-500 duration-100 exit" onclick="redirect()"
+            >
+              Exit
+            </button>
+          </div>
+        </div>
+        <!-- captions -->
+        <section class="flex-[6] p-6 flex lyrics-section">
+          <p
+            class="font-semibold text-gray-700 text-3xl overflow-y-auto scrollbar-hide lyrics_para"
+          >
+        <!-- LYRICS PARA -->
+	  getting captions...
+          </p>
+        </section>
+        <!-- rightside -->
+        <div class="flex-[4] flex flex-col px-4 py-6 border-l space-y-4">
+          <div
+            class="bg-gray-50 p-4  flex flex-col items-start rounded-md shadow-md max-h-[25rem] overflow-y-auto scrollbar-hide source-section"
+          >
+            <h4 class="text-xl font-semibold" >Sources</h4>
+            <p class="source_para" >
+        <!-- SOURCE PARA -->
+	    sources will appear here...
+            </p>
+          </div>
+          <div
+            class="bg-gray-50 p-3 flex flex-col items-start rounded-md shadow-lg max-h-[25rem] overflow-auto scrollbar-hide summary-section"
+          >
+            <h4 class="text-xl font-semibold">Notes:</h4>
+            <p class="summary_para">
+        <!-- SUMMARY PARA -->
+	summary will appear here...
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Player -->
+      <div class="flex"></div>
+    </main>
+        <script type="text/javascript">
 	let curr = `${window.location.href}`
 	const arr = curr.split("/")
+
+	let contents = {
+				lyrics_para: "",
+				source_para: "",
+				summary_para: "",
+				teach_class: "",
+				teach_time: "",
+				teach_er: "",
+
+			}
+
+				
 
 	let pk = arr[4]
 
@@ -25,8 +111,23 @@
 
         chatSocket.onmessage = function(e){
             let data = JSON.parse(e.data)
+		
             console.log('Data:', data)
+
+	    let d_text = data.d_text
+	let d_type = data.d_type
+
+	console.log(d_type)
+	console.log(d_text)
+
+	
+	let d_area = document.getElementsByClassName(`${d_type}`)[0]
+	
+	contents[d_type] += ` ${d_text}`
+	
+	d_area.innerHTML = contents[d_type]
 	}
+	
 	
 	
 
@@ -100,5 +201,12 @@
 				}
 		    }
 
+	function redirect(){
+
+				window.location.href = `${window.location.origin}/teacher`
+			}
+
 	</script>
-<body>
+
+  </body>
+</html>
