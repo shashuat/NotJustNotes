@@ -21,9 +21,11 @@
   <header class="header">
     <div class="header-content responsive-wrapper">
       <div class="header-logo">
+        {% if user.is_authenticated %}
         <a>
-          Welcome Students
+          Welcome {{ user.username }}
         </a>
+        {% endif %}
       </div>
       <div class="header-navigation">
         <nav class="header-navigation-links">
@@ -59,7 +61,7 @@
   <main class="main">
     <div class="responsive-wrapper">
       <div class="main-header">
-        <h1>Join new Course -></h1>
+        <h1>Join new Course</h1>
         <div class="search">
           <form method="post">
             {% csrf_token %}
@@ -71,22 +73,9 @@
         </div>
       </div>
       <div class="horizontal-tabs">
-        <a href="#">My details</a>
-        <a href="#">Profile</a>
-        <a href="#">Notifications</a>
-        <a href="#" class="active">Premium</a>
+        <a href="#">My Courses</a>
       </div>
       <div class="content">
-        <div class="content-panel">
-          <div class="vertical-tabs">
-            <a href="#" class="active">View all</a>
-            <a href="#">Developer tools</a>
-            <a href="#">Communication</a>
-            <a href="#">Productivity</a>
-            <a href="#">Browser tools</a>
-            <a href="#">Marketplace</a>
-          </div>
-        </div>
         <div class="content-main">
           <div class="card-grid">
             {% for data in data%}
