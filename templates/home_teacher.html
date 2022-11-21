@@ -73,14 +73,8 @@
       <div class="horizontal-tabs">
         <a href="#">My details</a>
         <a href="#">Profile</a>
-        <a href="#">Password</a>
-        <a href="#">Team</a>
-        <a href="#">Plan</a>
-        <a href="#">Billing</a>
-        <a href="#">Email</a>
         <a href="#">Notifications</a>
-        <a href="#" class="active">Integrations</a>
-        <a href="#">API</a>
+        <a href="#" class="active">Premium</a>
       </div>
       <div class="content">
         <div class="content-panel">
@@ -103,8 +97,7 @@
                   <h3> {{ data.course_name}}</h3>
                 </div>
                 <label class="toggle">
-                  <input type="checkbox" checked>
-                  <span></span>
+                  <button type="button"><a href="/classroom/{{data.course_id}}/teacher/delete/">Delete</a></button>
                 </label>
               </div>
               <div class="card-body">

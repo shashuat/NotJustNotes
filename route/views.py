@@ -51,7 +51,7 @@ def teacher_page(request):
                 messages.success(request, f'new course {c_name} created successfully')
                 data=course.objects.filter(teacher_name=user)
                 context={"data":data}
-                return render(request,'home_teacher.html',context)
+                return redirect('/teacher/',context)
         else:
             data=course.objects.filter(teacher_name=user)
         data=course.objects.filter(teacher_name=user)
@@ -75,7 +75,7 @@ def student_page(request):
                 messages.success(request, 'New course added succcessfully')
                 data=student.objects.filter(student_name=user)
                 context={"data":data}
-                return render(request,'home_teacher.html',context)
+                return redirect('/student/',context)
         else:
             data=student.objects.filter(student_name=user)
         data=student.objects.filter(student_name=user)
@@ -106,3 +106,15 @@ def teacher_classroom(request,**kwargs):
     else:
         return render(request,'error.html')
 
+def delete_student_course(request, **kwargs):
+    user=request.user
+    pk=kwargs.get('pk')
+    emp = student.objects.get(student_name=user,course_id = pk)
+    emp.delete()
+    return redirect("/student/")
+
+def delete_teacher_course(request, **kwargs):
+    pk=kwargs.get('pk')
+    emp = course.objects.get(pk = pk)
+    emp.delete()
+    return redirect("/teacher/")
