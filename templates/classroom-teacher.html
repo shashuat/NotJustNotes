@@ -36,18 +36,18 @@
           <div
             class="flex flex-col items-start w-full bg-white shadow-lg p-3 rounded-md"
           >
-            <h2 class="text-lg font-bold teach_class">Neural Netwok and Fuzzy Set</h2>
-            <h3 class="text-xs self-end text-gray-700 teach_er">Manoj Gupta</h3>
+            <h2 class="text-xl font-bold teach_class">Neural Netwok and Fuzzy Set</h2>
+            <h3 class="text-sm self-end text-gray-700 teach_er">Manoj Gupta</h3>
             <p class="text-sm text-gray-500 teach_time">Started: 15:45:12</p>
           </div>
           <div class="flex flex-col space-y-4">
             <button
-              class="bg-white-100 text-purple-400 shadow-lg font-bold text-lg py-4 w-full rounded-md mx-auto hover:bg-gray-100 duration-100 control-button"
+              class="bg-white-100 text-cyan-600 shadow-lg font-bold text-lg py-4 w-full rounded-md mx-auto border-2 hover:border-green-300 duration-100 control-button border-gray-200"
             >
               Start
             </button>
             <button
-              class="bg-white-100 text-purple-400 shadow-lg font-bold text-lg p-4 mx-auto w-full rounded-md hover:bg-gray-100 duration-100 exit" onclick="redirect()"
+              class="bg-white-100 text-cyan-600 shadow-lg font-bold text-lg p-4 mx-auto w-full rounded-md border-2 hover:border-red-300 duration-100 exit border-gray-200" onclick="redirect()"
             >
               Exit
             </button>
@@ -56,7 +56,7 @@
         <!-- captions -->
         <section class="flex-[6] p-6 flex lyrics-section">
           <p
-            class="font-semibold text-gray-700 text-3xl overflow-y-auto scrollbar-hide lyrics_para"
+            class="font-semibold text-gray-400 text-3xl overflow-y-auto scrollbar-hide lyrics_para"
           >
         <!-- LYRICS PARA -->
 	  getting captions...
@@ -67,8 +67,8 @@
           <div
             class="bg-gray-50 p-4  flex flex-col items-start rounded-md shadow-md max-h-[25rem] overflow-y-auto scrollbar-hide source-section"
           >
-            <h4 class="text-xl font-semibold" >Sources</h4>
-            <p class="source_para" >
+            <h3 class="text-xl font-semibold" >Sources</h3>
+            <p class="source_para text-gray-400" >
         <!-- SOURCE PARA -->
 	    sources will appear here...
             </p>
@@ -76,8 +76,8 @@
           <div
             class="bg-gray-50 p-3 flex flex-col items-start rounded-md shadow-lg max-h-[25rem] overflow-auto scrollbar-hide summary-section"
           >
-            <h4 class="text-xl font-semibold">Notes:</h4>
-            <p class="summary_para">
+            <h3 class="text-xl font-semibold">Notes</h3>
+            <p class="summary_para text-gray-400">
         <!-- SUMMARY PARA -->
 	summary will appear here...
             </p>
@@ -91,6 +91,8 @@
 	let curr = `${window.location.href}`
 	const arr = curr.split("/")
 
+	
+
 	let contents = {
 				lyrics_para: "",
 				source_para: "",
@@ -102,6 +104,14 @@
 			}
 
 				
+	let firs = {
+				lyrics_para: true,
+				source_para:true ,
+				summary_para:true ,
+				teach_class: false,
+				teach_time: false,
+				teach_er: false,
+			}
 
 	let pk = arr[4]
 
@@ -124,6 +134,12 @@
 	let d_area = document.getElementsByClassName(`${d_type}`)[0]
 	
 	contents[d_type] += ` ${d_text}`
+
+				if (firs[d_type]){
+							firs[d_type] = false
+							d_area.classList.remove("text-gray-400")
+							d_area.classList.add("text-gray-700")
+						}
 	
 	d_area.innerHTML = contents[d_type]
 	
