@@ -121,6 +121,8 @@
 	contents[d_type] += ` ${d_text}`
 	
 	d_area.innerHTML = contents[d_type]
+
+	d_area.scrollTop = d_area.scrollHeight - d_area.clientHeight;
 	}
 
 

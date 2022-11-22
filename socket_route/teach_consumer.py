@@ -1,17 +1,22 @@
 import json
-from channels.generic.websocket import WebsocketConsumer
+import asyncio
+from channels.generic.websocket import AsyncWebsocketConsumer
 from route.models import course  
 
-from asgiref.sync import async_to_sync
+from asgiref.sync import sync_to_async 
 import whisper
 
 from datetime import datetime
 
-import threading
 
-class TeachConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()
+from tldr import getSummary
+from tldr.getSummary import getSummary
+import time
+
+
+class TeachConsumer(AsyncWebsocketConsumer):
+     async def connect(self):
+        await self.accept()
         self.user = self.scope["user"]
         self.route = self.scope["path"]
         
@@ -28,13 +33,13 @@ class TeachConsumer(WebsocketConsumer):
         self.start_time = datetime.now().strftime("%H:%M:%S")
         self.narration = True
 
-        async_to_sync(self.channel_layer.group_add)(f"class-{self.class_id}-teacher", self.channel_name)
-        async_to_sync(self.channel_layer.group_add)(f"class-{self.class_id}-joined", self.channel_name)
+        await self.channel_layer.group_add(f"class-{self.class_id}-teacher", self.channel_name)
+        await self.channel_layer.group_add(f"class-{self.class_id}-joined", self.channel_name)
 
-        data = course.objects.get(course_id=self.class_id)
+        data = await sync_to_async(course.objects.get)(course_id=self.class_id)
         self.class_name = data.course_name
 
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
             f"class-{self.class_id}-student",
             {
                 "type": "class_started",
@@ -49,7 +54,7 @@ class TeachConsumer(WebsocketConsumer):
                 "teach_er" : f"{self.user}"
                 }
 
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
                 f"class-{self.class_id}-teacher",
                 { 
                     "type": "disp",
@@ -58,11 +63,24 @@ class TeachConsumer(WebsocketConsumer):
          )
 
 
-
         self.model = whisper.load_model("tiny")
 
+    #    await self.channel_layer.group_send(f"class-{self.class_id}-teacher", {
+    #       "type" : "summ"
+    #       })
+        loop = asyncio.get_event_loop()
 
-    def receive(self, bytes_data):
+        asyncio.ensure_future(self.summ(""))
+        loop.run_forever()
+
+
+
+
+
+
+
+
+     async def receive(self, bytes_data):
         self.chunks.append(bytes_data)
 
         filename = f'samples/filename{self.caller}.mp3'
@@ -95,15 +113,15 @@ class TeachConsumer(WebsocketConsumer):
         self.transcript += script
 
 
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
                 f"class-{self.class_id}-joined",
                 {
                     "type": "transcription",
                     "trans": script ,
                     },)
 
-    def send_script(self, event):
-        async_to_sync(self.channel_layer.send)(f"{event['sender']}",
+     async def send_script(self, event):
+        await self.channel_layer.send(f"{event['sender']}",
             {
                 "type" : "beg_script",
                 "trans" : self.transcript,
@@ -114,8 +132,7 @@ class TeachConsumer(WebsocketConsumer):
                 
                 })
 
-
-    def transcription(self, event):
+     async def transcription(self, event):
         script = event["trans"]
 
         contents = {
@@ -123,15 +140,40 @@ class TeachConsumer(WebsocketConsumer):
                 "d_text": script}
 
 
-        self.send(text_data = json.dumps(contents))
+        await self.send(text_data = json.dumps(contents))
 
-    def disp(self, event):
+     async def disp(self, event):
         contents = event["contents"]
         
         for k,v in contents.items():
-            self.send(text_data = json.dumps(
+            await self.send(text_data = json.dumps(
                 {
                     "d_type" : k,
                     "d_text" : v,
                     }))
+
+     async def summ(self, event):
+        while True:
+
+            summary = getSummary(self.transcript)
+
+            self.summary += summary
+
+            if not summary == "":
+                await self.channel_layer.group_send(f"class-{self.class_id}-joined",
+                        {
+                            "type": "narrate",
+                            "summary": self.summary
+                            })
+
+
+
+
+
+
+
+
+
+
+
 
