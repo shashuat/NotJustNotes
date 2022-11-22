@@ -29,23 +29,11 @@
       </div>
       <div class="header-navigation">
         <nav class="header-navigation-links">
-          <a href="#"> Home </a>
-          <a href="#"> Dashboard </a>
-          <a href="#"> Projects </a>
-          <a href="#"> Tasks </a>
-          <a href="#"> Reporting </a>
-          <a href="#"> Users </a>
         </nav>
         <div class="header-navigation-actions">
           <a href="/logout/" class="button">
             <i class="ph-lightning-bold"></i>
             <span>Sign Out</span>
-          </a>
-          <a href="#" class="icon-button">
-            <i class="ph-gear-bold"></i>
-          </a>
-          <a href="#" class="icon-button">
-            <i class="ph-bell-bold"></i>
           </a>
           <a href="#" class="avatar">
             <img src="https://uifaces.co/our-content/donated/gPZwCbdS.jpg" alt="" />
@@ -86,11 +74,13 @@
                   <h3> {{ data.course_name}}</h3>
                 </div>
                 <label class="toggle">
-                  <button type="button"><a href="/classroom/{{data.course_id}}/teacher/delete/">Delete</a></button>
+                  <a href="/classroom/{{data.course_id}}/teacher/delete/" class="icon-button">
+                    <i class="ph-trash-bold"></i>
+                  </a>
                 </label>
               </div>
               <div class="card-body">
-                <p>Starting this class will send a notification to your students </p>
+                <p>Starting this class to notification to your students and share code #{{data.course_id}} with your students</p>
               </div>
               <div class="card-footer">
                 <a href="/classroom/{{data.course_id}}/teacher/">Start Class</a>
