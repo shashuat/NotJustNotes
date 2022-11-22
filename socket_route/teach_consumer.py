@@ -5,6 +5,10 @@ from route.models import course
 from asgiref.sync import async_to_sync
 import whisper
 
+from datetime import datetime
+
+import threading
+
 class TeachConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
@@ -20,6 +24,9 @@ class TeachConsumer(WebsocketConsumer):
         self.transcript = ""
         self.summary = ""
         self.chunks = []
+
+        self.start_time = datetime.now().strftime("%H:%M:%S")
+        self.narration = True
 
         async_to_sync(self.channel_layer.group_add)(f"class-{self.class_id}-teacher", self.channel_name)
         async_to_sync(self.channel_layer.group_add)(f"class-{self.class_id}-joined", self.channel_name)
@@ -38,7 +45,7 @@ class TeachConsumer(WebsocketConsumer):
 
         set_con = {
                 "teach_class": self.class_name,
-                "teach_time": "00:00:00",
+                "teach_time": self.start_time,
                 "teach_er" : f"{self.user}"
                 }
 
@@ -103,7 +110,7 @@ class TeachConsumer(WebsocketConsumer):
                 "summary" : self.summary,
                 "teach_er" : f"{self.user}",
                 "teach_class": self.class_name,
-                "teach_time" : "00:00:00"
+                "teach_time" : self.start_time
                 
                 })
 
