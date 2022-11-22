@@ -31,7 +31,7 @@ class ClassConsumer(WebsocketConsumer):
     def transcription(self, event):
         script = event["trans"]
 
-        self.transcript += script
+        self.transcript = script
 
         contents = {
                 "d_type": "lyrics_para",
@@ -56,6 +56,15 @@ class ClassConsumer(WebsocketConsumer):
                     "d_type" : k,
                     "d_text" : v,
                     }))
+
+    def narrate(self, event):
+        self.summary = event["summary"]
+
+        self.send(text_data = json.dumps(
+            {
+                "d_type" : "summary_para",
+                "d_text" : self.summary
+                }))
             
 
 

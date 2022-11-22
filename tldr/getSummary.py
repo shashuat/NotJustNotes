@@ -3,6 +3,9 @@ def getSummary(text):
     from spacy.lang.en.stop_words import STOP_WORDS
     from string import punctuation
 
+    if text == "":
+        return ""
+
     stopwords = list(STOP_WORDS)
     nlp = spacy.load('en_core_web_sm')
     doc = nlp(text)

@@ -9,7 +9,7 @@ def getSource(text):
     from nltk.stem import WordNetLemmatizer 
     from nltk.corpus import stopwords
     nltk.download('stopwords')    #download if using this module for the first time
-
+    
     tokens = word_tokenize(text)
     lowercase_tokens = [t.lower() for t in tokens]
     # print(lowercase_tokens)

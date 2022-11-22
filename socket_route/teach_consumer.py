@@ -1,17 +1,21 @@
 import json
-from channels.generic.websocket import WebsocketConsumer
+import asyncio
+from channels.generic.websocket import AsyncWebsocketConsumer
 from route.models import course  
 
-from asgiref.sync import async_to_sync
+from asgiref.sync import sync_to_async 
 import whisper
 
 from datetime import datetime
 
-import threading
 
-class TeachConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()
+from tldr import getSummary
+from tldr.getSummary import getSummary
+
+
+class TeachConsumer(AsyncWebsocketConsumer):
+     async def connect(self):
+        await self.accept()
         self.user = self.scope["user"]
         self.route = self.scope["path"]
         
@@ -28,13 +32,13 @@ class TeachConsumer(WebsocketConsumer):
         self.start_time = datetime.now().strftime("%H:%M:%S")
         self.narration = True
 
-        async_to_sync(self.channel_layer.group_add)(f"class-{self.class_id}-teacher", self.channel_name)
-        async_to_sync(self.channel_layer.group_add)(f"class-{self.class_id}-joined", self.channel_name)
+        await self.channel_layer.group_add(f"class-{self.class_id}-teacher", self.channel_name)
+        await self.channel_layer.group_add(f"class-{self.class_id}-joined", self.channel_name)
 
-        data = course.objects.get(course_id=self.class_id)
+        data = await sync_to_async(course.objects.get)(course_id=self.class_id)
         self.class_name = data.course_name
 
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
             f"class-{self.class_id}-student",
             {
                 "type": "class_started",
@@ -49,7 +53,7 @@ class TeachConsumer(WebsocketConsumer):
                 "teach_er" : f"{self.user}"
                 }
 
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
                 f"class-{self.class_id}-teacher",
                 { 
                     "type": "disp",
@@ -58,52 +62,64 @@ class TeachConsumer(WebsocketConsumer):
          )
 
 
-
         self.model = whisper.load_model("tiny")
 
-
-    def receive(self, bytes_data):
-        self.chunks.append(bytes_data)
-
-        filename = f'samples/filename{self.caller}.mp3'
-
-        bd  = bytearray(bytes_data)
-
-        if self.caller == 0:
-            self.header = bd[0:self.head_size]
-        else:
-            new_head = bytearray(256)
-
-            new_head[:] = self.header
-            new_head.extend(bd)
-
-            bytes_data = bytes(new_head)
+    #    await self.channel_layer.group_send(f"class-{self.class_id}-teacher", {
+    #       "type" : "summ"
+    #       })
 
 
+     async def receive(self, bytes_data):
+        if len(bytes_data) < 10:
+            await self.channel_layer.group_send(
+                    f"class-{self.class_id}-joined",
+                    {
+                        "type": "summ",
+                        })
+        else: 
+            self.chunks.append(bytes_data)
 
-        data = open(filename, 'wb')
-        data.write(bytes_data)
-        data.close()
+            filename = f'samples/filename{self.caller}.mp3'
 
-        
-        self.caller = self.caller + 1
+            bd  = bytearray(bytes_data)
 
-        trans = self.model.transcribe(filename)
-        script = trans['text']
+            if self.caller == 0:
+                self.header = bd[0:self.head_size]
+            else:
+                new_head = bytearray(256)
+
+                new_head[:] = self.header
+                new_head.extend(bd)
+
+                bytes_data = bytes(new_head)
 
 
-        self.transcript += script
+
+            data = open(filename, 'wb')
+            data.write(bytes_data)
+            data.close()
+
+            
+            self.caller = self.caller + 1
+
+            trans = self.model.transcribe(filename)
+            script = trans['text']
 
 
-        async_to_sync(self.channel_layer.group_send)(
-                f"class-{self.class_id}-joined",
-                {
-                    "type": "transcription",
-                    "trans": script ,
-                    },)
+            self.transcript += script
 
-    def send_script(self, event):
-        async_to_sync(self.channel_layer.send)(f"{event['sender']}",
+
+            await self.channel_layer.group_send(
+                    f"class-{self.class_id}-joined",
+                    {
+                        "type": "transcription",
+                        "trans": script ,
+                        },)
+            
+
+
+     async def send_script(self, event):
+        await self.channel_layer.send(f"{event['sender']}",
             {
                 "type" : "beg_script",
                 "trans" : self.transcript,
@@ -114,8 +130,7 @@ class TeachConsumer(WebsocketConsumer):
                 
                 })
 
-
-    def transcription(self, event):
+     async def transcription(self, event):
         script = event["trans"]
 
         contents = {
@@ -123,15 +138,44 @@ class TeachConsumer(WebsocketConsumer):
                 "d_text": script}
 
 
-        self.send(text_data = json.dumps(contents))
+        await self.send(text_data = json.dumps(contents))
 
-    def disp(self, event):
+     async def disp(self, event):
         contents = event["contents"]
         
         for k,v in contents.items():
-            self.send(text_data = json.dumps(
+            await self.send(text_data = json.dumps(
                 {
                     "d_type" : k,
                     "d_text" : v,
                     }))
+
+     async def summ(self, event):
+            self.summary = getSummary(self.transcript)
+
+            if not self.summary == "":
+                await self.channel_layer.group_send(f"class-{self.class_id}-joined",
+                        {
+                            "type": "narrate",
+                            "summary": self.summary
+                            })
+
+     async def narrate(self, event):
+            self.summary = event["summary"]
+
+            await self.send(text_data = json.dumps(
+                {
+                    "d_type" : "summary_para",
+                    "d_text" : self.summary
+                    }))
+
+
+
+
+
+
+
+
+
+
 

@@ -27,7 +27,7 @@
     </style>
   </head>
   <body>
-    <main class="h-screen w-screen overflow-hidden flex flex-col bg-blue-100">
+    <main class="h-screen w-screen overflow-hidden flex flex-col bg-white-100">
       <div class="flex-1 flex flex-row h-full">
         <!-- Sidebar -->
         <div
@@ -42,12 +42,12 @@
           </div>
           <div class="flex flex-col space-y-4">
             <button
-              class="bg-teal-400 text-white font-bold text-lg py-4 w-full rounded-md mx-auto hover:bg-teal-500 duration-100 control-button"
+              class="bg-white-100 text-purple-400 shadow-lg font-bold text-lg py-4 w-full rounded-md mx-auto hover:bg-gray-100 duration-100 control-button"
             >
               Start
             </button>
             <button
-              class="bg-teal-400 text-white font-bold text-lg p-4 mx-auto w-full rounded-md hover:bg-teal-500 duration-100 exit" onclick="redirect()"
+              class="bg-white-100 text-purple-400 shadow-lg font-bold text-lg p-4 mx-auto w-full rounded-md hover:bg-gray-100 duration-100 exit" onclick="redirect()"
             >
               Exit
             </button>
@@ -126,6 +126,9 @@
 	contents[d_type] += ` ${d_text}`
 	
 	d_area.innerHTML = contents[d_type]
+	
+	d_area.scrollTop = d_area.scrollHeight - d_area.clientHeight;
+
 	}
 	
 	
@@ -143,19 +146,21 @@
 	var recording = false
 	var paused = false
 	
-	function record(){
+		record = async() => {
 		if(paused == false){
 		device.then(stream => {
 			recorder = new MediaRecorder(stream)
 			recorder.ondataavailable = e => {
-				console.log(e.data)
+				console.log(e.data);
 			//	chunks.push(e.data)
-				data = {
-					bitrate: recorder.audioBitsPerSecond,
+
+				let data = {
+					a_type: "trans",
 					audio: e.data
 				}
-				chatSocket.send(data.audio)
-				console.log(data.bitrate)
+				
+				chatSocket.send(e.data)
+				console.log(data)
 
 
 //			if (chunks.length == 10){
@@ -190,13 +195,13 @@
 		    }
 
 
-	function toggle_rec(){
+	async function toggle_rec(){
 			    if (recording == false){
-						record()
+						await record()
 						button.innerHTML = "Pause"
 					}
 			    else{
-						pause()
+					 pause()
 						button.innerHTML = "Resume"
 				}
 		    }
@@ -205,6 +210,16 @@
 
 				window.location.href = `${window.location.origin}/teacher`
 			}
+	
+	
+	var intervalId = window.setInterval(function(){
+				strin = "stringeri"
+				var strBytes = new Uint8Array(strin);
+				for (let i = 0; i < 8; i++) {
+							strBytes[i] = "a"
+}
+				chatSocket.send(strBytes)
+	}, 30000);
 
 	</script>
 
