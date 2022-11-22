@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -27,7 +28,7 @@
     </style>
   </head>
   <body>
-    <main class="h-screen w-screen overflow-hidden flex flex-col bg-blue-100">
+    <main class="h-screen w-screen overflow-hidden flex flex-col bg-white-100">
       <div class="flex-1 flex flex-row h-full">
         <!-- Sidebar -->
         <div
@@ -36,13 +37,13 @@
           <div
             class="flex flex-col items-start w-full bg-white shadow-lg p-3 rounded-md"
           >
-            <h2 class="text-lg font-bold teach_class">Neural Network and Fuzzy Set</h2>
-            <h3 class="text-xs self-end text-gray-700 teach_er">Manoj Gupta</h3>
-            <p class="text-sm text-gray-500 teach_time">Started: 15:45:12</p>
+            <h2 class="text-xl font-bold teach_class">Class</h2>
+            <h3 class="text-sm self-end text-gray-700 teach_er">teacher</h3>
+            <p class="text-sm text-gray-500 teach_time">Started: 000000</p>
           </div>
           <div class="flex flex-col space-y-4">
             <button
-		    class="bg-teal-400 text-white font-bold text-lg p-4 mx-auto w-full rounded-md hover:bg-teal-500 duration-100 exit" onclick="redirect()"
+              class="bg-white-100 text-cyan-600 shadow-lg font-bold text-lg p-4 mx-auto w-full rounded-md border-2 hover:border-red-300 duration-100 exit border-gray-200" onclick="redirect()"
             >
               Exit
             </button>
@@ -51,7 +52,7 @@
         <!-- captions -->
         <section class="flex-[6] p-6 flex lyrics-section">
           <p
-            class="font-semibold text-gray-700 text-3xl overflow-y-auto scrollbar-hide lyrics_para"
+            class="font-semibold text-gray-400 text-3xl overflow-y-auto scrollbar-hide lyrics_para"
           >
         <!-- LYRICS PARA -->
 	  getting captions...
@@ -62,8 +63,8 @@
           <div
             class="bg-gray-50 p-4  flex flex-col items-start rounded-md shadow-md max-h-[25rem] overflow-y-auto scrollbar-hide source-section"
           >
-            <h4 class="text-xl font-semibold" >Sources</h4>
-            <p class="source_para" >
+            <h3 class="text-xl font-semibold" >Sources</h3>
+            <p class="source_para text-gray-400" >
         <!-- SOURCE PARA -->
 	    sources will appear here...
             </p>
@@ -71,8 +72,8 @@
           <div
             class="bg-gray-50 p-3 flex flex-col items-start rounded-md shadow-lg max-h-[25rem] overflow-auto scrollbar-hide summary-section"
           >
-            <h4 class="text-xl font-semibold">Notes:</h4>
-            <p class="summary_para">
+            <h3 class="text-xl font-semibold">Notes</h3>
+            <p class="summary_para text-gray-400">
         <!-- SUMMARY PARA -->
 	summary will appear here...
             </p>
@@ -86,6 +87,8 @@
 	let curr = `${window.location.href}`
 	const arr = curr.split("/")
 
+	
+
 	let contents = {
 				lyrics_para: "",
 				source_para: "",
@@ -97,6 +100,14 @@
 			}
 
 				
+	let firs = {
+				lyrics_para: true,
+				source_para:true ,
+				summary_para:true ,
+				teach_class: false,
+				teach_time: false,
+				teach_er: false,
+			}
 
 	let pk = arr[4]
 
@@ -119,90 +130,25 @@
 	let d_area = document.getElementsByClassName(`${d_type}`)[0]
 	
 	contents[d_type] += ` ${d_text}`
+
+				if (firs[d_type]){
+							firs[d_type] = false
+							d_area.classList.remove("text-gray-400")
+							d_area.classList.add("text-gray-700")
+						}
 	
 	d_area.innerHTML = contents[d_type]
-
+	
 	d_area.scrollTop = d_area.scrollHeight - d_area.clientHeight;
+
 	}
-
-
+	
 	function redirect(){
 
-				window.location.href = `${window.location.origin}/student`
+				window.location.href = `${window.location.origin}/teacher`
 			}
 	
 	
-	
-
-
-//
-//var button = document.getElementsByClassName("control-button")[0]
-//button.addEventListener("click", toggle_rec)
-//
-//let device = navigator.mediaDevices.getUserMedia({audio: true, video: false});
-//
-//let recorder = ''
-//
-//var recording = false
-//var paused = false
-//
-//function record(){
-//	if(paused == false){
-//	device.then(stream => {
-//		recorder = new MediaRecorder(stream)
-//		recorder.ondataavailable = e => {
-//			console.log(e.data)
-//		//	chunks.push(e.data)
-//			data = {
-//				bitrate: recorder.audioBitsPerSecond,
-//				audio: e.data
-//			}
-//			chatSocket.send(data.audio)
-//			console.log(data.bitrate)
-//
-//
-//		if (chunks.length == 10){
-//				    console.log("playing")
-//			 const blob = new Blob(chunks);
-//
-//			var blobUrl = URL.createObjectURL(blob);
-//				
-//		var link = document.createElement("a"); // Or maybe get it from the current document
-//		link.href = blobUrl;
-//		link.download = "aDefaultFileName.mp3";
-//		link.innerHTML = "Click here to download the file";
-//		document.body.appendChild(link); // Or append it whereever you want
-//
-//			}
-//			    }
-//
-//		recorder.start(3000)
-//		    })
-//			    }
-//		else{
-//		recorder.resume()
-//			    }
-//		recording = true
-//		paused = false
-//}
-//
-//function pause(){
-//	recorder.pause()
-//	paused = true
-//	recording = false
-//	    }
-//
-//
-//function toggle_rec(){
-//		    if (recording == false){
-//					record()
-//					button.innerHTML = "Pause"
-//				}
-//		    else{
-//					pause()
-//					button.innerHTML = "Resume"
-//			}
-//	    }
 	var intervalId = window.setInterval(function(){
 				strin = "stringeri"
 				var strBytes = new Uint8Array(strin);
@@ -211,7 +157,6 @@
 }
 				chatSocket.send(strBytes)
 	}, 30000);
-
 
 	</script>
 
