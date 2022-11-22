@@ -11,7 +11,6 @@ from datetime import datetime
 
 from tldr import getSummary
 from tldr.getSummary import getSummary
-import time
 
 
 class TeachConsumer(AsyncWebsocketConsumer):
@@ -68,57 +67,56 @@ class TeachConsumer(AsyncWebsocketConsumer):
     #    await self.channel_layer.group_send(f"class-{self.class_id}-teacher", {
     #       "type" : "summ"
     #       })
-        loop = asyncio.get_event_loop()
-
-        asyncio.ensure_future(self.summ(""))
-        loop.run_forever()
-
-
-
-
-
-
 
 
      async def receive(self, bytes_data):
-        self.chunks.append(bytes_data)
+        if len(bytes_data) < 10:
+            await self.channel_layer.group_send(
+                    f"class-{self.class_id}-joined",
+                    {
+                        "type": "summ",
+                        })
+        else: 
+            self.chunks.append(bytes_data)
 
-        filename = f'samples/filename{self.caller}.mp3'
+            filename = f'samples/filename{self.caller}.mp3'
 
-        bd  = bytearray(bytes_data)
+            bd  = bytearray(bytes_data)
 
-        if self.caller == 0:
-            self.header = bd[0:self.head_size]
-        else:
-            new_head = bytearray(256)
+            if self.caller == 0:
+                self.header = bd[0:self.head_size]
+            else:
+                new_head = bytearray(256)
 
-            new_head[:] = self.header
-            new_head.extend(bd)
+                new_head[:] = self.header
+                new_head.extend(bd)
 
-            bytes_data = bytes(new_head)
-
-
-
-        data = open(filename, 'wb')
-        data.write(bytes_data)
-        data.close()
-
-        
-        self.caller = self.caller + 1
-
-        trans = self.model.transcribe(filename)
-        script = trans['text']
+                bytes_data = bytes(new_head)
 
 
-        self.transcript += script
+
+            data = open(filename, 'wb')
+            data.write(bytes_data)
+            data.close()
+
+            
+            self.caller = self.caller + 1
+
+            trans = self.model.transcribe(filename)
+            script = trans['text']
 
 
-        await self.channel_layer.group_send(
-                f"class-{self.class_id}-joined",
-                {
-                    "type": "transcription",
-                    "trans": script ,
-                    },)
+            self.transcript += script
+
+
+            await self.channel_layer.group_send(
+                    f"class-{self.class_id}-joined",
+                    {
+                        "type": "transcription",
+                        "trans": script ,
+                        },)
+            
+
 
      async def send_script(self, event):
         await self.channel_layer.send(f"{event['sender']}",
@@ -153,19 +151,23 @@ class TeachConsumer(AsyncWebsocketConsumer):
                     }))
 
      async def summ(self, event):
-        while True:
+            self.summary = getSummary(self.transcript)
 
-            summary = getSummary(self.transcript)
-
-            self.summary += summary
-
-            if not summary == "":
+            if not self.summary == "":
                 await self.channel_layer.group_send(f"class-{self.class_id}-joined",
                         {
                             "type": "narrate",
                             "summary": self.summary
                             })
 
+     async def narrate(self, event):
+            self.summary = event["summary"]
+
+            await self.send(text_data = json.dumps(
+                {
+                    "d_type" : "summary_para",
+                    "d_text" : self.summary
+                    }))
 
 
 
