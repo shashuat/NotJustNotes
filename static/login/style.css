@@ -1,5 +1,5 @@
 body {
-  background: #ABCDEF;
+  background: white;
   font-family: Assistant, sans-serif;
   display: flex;
   min-height: 90vh;
@@ -14,9 +14,9 @@ body {
     linear-gradient(to right, #267871, #136a8a);
   margin: auto;
   box-shadow: 
-    0px 2px 10px rgba(0,0,0,0.2), 
-    0px 10px 20px rgba(0,0,0,0.3), 
-    0px 30px 60px 1px rgba(0,0,0,0.5);
+    0px 1px 5px rgba(0,0,0,0.2), 
+    0px 5px 10px rgba(0,0,0,0.3), 
+    0px 10px 10px 1px rgba(0,0,0,0.5);
   border-radius: 8px;
   padding: 50px;
 }
