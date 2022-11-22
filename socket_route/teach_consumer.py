@@ -72,7 +72,7 @@ class TeachConsumer(AsyncWebsocketConsumer):
      async def receive(self, bytes_data):
         if len(bytes_data) < 10:
             await self.channel_layer.group_send(
-                    f"class-{self.class_id}-joined",
+                    f"class-{self.class_id}-teacher",
                     {
                         "type": "summ",
                         })
